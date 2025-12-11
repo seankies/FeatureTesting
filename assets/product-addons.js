@@ -7,15 +7,15 @@
   function initProductAddons() {
     const productForms = document.querySelectorAll('form[action^="/cart/add"], form[action*="/cart/add"]');
     
-    if (! productForms || productForms.length === 0) return;
+    if (!productForms || productForms.length === 0) return;
     
     productForms.forEach(function(form) {
       form.addEventListener('submit', function(e) {
         try {
           const addonsContainer = form.querySelector('[id^="product-addons-"]');
-          if (! addonsContainer) return;
+          if (!addonsContainer) return;
           
-          const checkedAddons = Array.from(addonsContainer.querySelectorAll('. product-addons__checkbox:checked'));
+          const checkedAddons = Array.from(addonsContainer.querySelectorAll('.product-addons__checkbox:checked'));
           if (checkedAddons.length === 0) return;
           
           e.preventDefault();
@@ -27,26 +27,28 @@
             return;
           }
           
-          const qtyInput = form. querySelector('input[name="quantity"]');
-          const mainVariantId = parseInt(variantInput. value);
+          const qtyInput = form.querySelector('input[name="quantity"]');
+          const mainVariantId = parseInt(variantInput.value);
           const mainQty = qtyInput ? parseInt(qtyInput.value) || 1 : 1;
           
-          if (! mainVariantId) {
+          if (!mainVariantId) {
             console.error('Invalid variant ID');
             return;
           }
           
           // Disable submit buttons
-          const submitBtns = form. querySelectorAll('[type="submit"]');
+          const submitBtns = form.querySelectorAll('[type="submit"]');
+          const originalButtonTexts = new Map();
           submitBtns.forEach(btn => {
+            originalButtonTexts.set(btn, btn.textContent);
             btn.setAttribute('disabled', 'disabled');
             btn.textContent = 'Adding...';
           });
           
           // Add main product first
-          fetch('/cart/add. js', {
+          fetch('/cart/add.js', {
             method: 'POST',
-            headers:  { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id: mainVariantId, quantity: mainQty })
           })
           .then(response => {
@@ -56,15 +58,15 @@
           .then(() => {
             // Add each addon sequentially
             let sequence = Promise.resolve();
-            checkedAddons. forEach(checkbox => {
+            checkedAddons.forEach(checkbox => {
               const addonVariantId = parseInt(checkbox.dataset.addonVariantId);
-              if (! addonVariantId) return;
+              if (!addonVariantId) return;
               
               sequence = sequence.then(() =>
-                fetch('/cart/add. js', {
+                fetch('/cart/add.js', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ id: addonVariantId, quantity:  1 })
+                  body: JSON.stringify({ id: addonVariantId, quantity: 1 })
                 })
                 .then(response => {
                   if (!response.ok) throw new Error(`Failed to add addon ${addonVariantId}`);
@@ -83,12 +85,12 @@
           })
           .catch(err => {
             console.error('Error adding to cart:', err);
-            alert('Sorry, there was an error adding items to your cart.  Please try again.');
+            alert('Sorry, there was an error adding items to your cart. Please try again.');
             
-            // Re-enable buttons
+            // Re-enable buttons and restore original text
             submitBtns.forEach(btn => {
               btn.removeAttribute('disabled');
-              btn.textContent = 'Add to Cart';
+              btn.textContent = originalButtonTexts.get(btn) || 'Add to Cart';
             });
           });
           
