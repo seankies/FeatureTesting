@@ -38,7 +38,9 @@
           
           // Disable submit buttons
           const submitBtns = form.querySelectorAll('[type="submit"]');
+          const originalButtonTexts = new Map();
           submitBtns.forEach(btn => {
+            originalButtonTexts.set(btn, btn.textContent);
             btn.setAttribute('disabled', 'disabled');
             btn.textContent = 'Adding...';
           });
@@ -85,10 +87,10 @@
             console.error('Error adding to cart:', err);
             alert('Sorry, there was an error adding items to your cart. Please try again.');
             
-            // Re-enable buttons
+            // Re-enable buttons and restore original text
             submitBtns.forEach(btn => {
               btn.removeAttribute('disabled');
-              btn.textContent = 'Add to Cart';
+              btn.textContent = originalButtonTexts.get(btn) || 'Add to Cart';
             });
           });
           

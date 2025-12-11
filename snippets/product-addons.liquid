@@ -9,7 +9,7 @@ Product Add-ons Block - Complete implementation
   <div class="product-addons__list">
     {% for addon_handle in addon_products %}
       {% assign addon_handle = addon_handle | strip %}
-      {% assign addon = all_products[addon_handle] %}
+      {% assign addon = collections.all.products[addon_handle] %}
       {% if addon and addon.available %}
         {% assign addon_variant = addon.selected_or_first_available_variant %}
         <label class="product-addons__item">
