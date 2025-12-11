@@ -1522,6 +1522,13 @@ p.bundle_product_title {
                                         </div>
                                     {%- when '@app' -%}
                                         {% render block %}
+                                    {%- when 'product_addons' -%}
+                                        <div class="productView-moreItem{% if settings.banner_animation == 'effect_fade_up' %} scroll-trigger animate--slide-in{% endif %}"
+                                            style="--spacing-top: {{ spacing_top | append: 'px' }};
+                                            --spacing-bottom: {{ spacing_bottom | append: 'px' }}"
+                                        >
+                                            {% render 'product-addons', block: block, product: product, section: section %}
+                                        </div>
                                     {%- when 'delivery_time' -%}
                                         {%- liquid
                                             assign delivery_time_icon = block.settings.delivery_time_icon

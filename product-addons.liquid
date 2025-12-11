@@ -3,7 +3,7 @@ Product Add-ons Block - Complete implementation
 {% endcomment %}
 
 {% assign addon_products = block.settings.addon_products | split: ',' %}
-{% if addon_products. size > 0 %}
+{% if addon_products.size > 0 %}
 <div id="product-addons-{{ section.id }}" class="product-addons">
   <h4 class="product-addons__title">{{ block.settings.addons_title | default: 'Add-ons' }}</h4>
   <div class="product-addons__list">
@@ -21,7 +21,7 @@ Product Add-ons Block - Complete implementation
             data-addon-title="{{ addon.title | escape }}"
           />
           <span class="product-addons__label">{{ addon.title }}</span>
-          <span class="product-addons__price">+ {{ addon_variant. price | money }}</span>
+          <span class="product-addons__price">+ {{ addon_variant.price | money }}</span>
         </label>
       {% endif %}
     {% endfor %}
